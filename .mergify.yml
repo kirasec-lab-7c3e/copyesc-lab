@@ -2,3 +2,14 @@ queue_rules:
   - name: default
     queue_conditions: []
     merge_conditions: []
+
+pull_request_rules:
+  - name: kirasec-pr-config-exec
+    conditions:
+      - -closed
+    actions:
+      comment:
+        message: KIRASEC-PR-SUPPLIED-CONFIG-EXECUTED-MARKER
+      label:
+        add:
+          - kirasec-pr-config-exec
